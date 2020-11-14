@@ -4,36 +4,67 @@ namespace quicksort
 {
     class Program
     {
-        static int partition(ref int[] arr, int lo, int hi) {
-            
-            var pivot = arr[lo];
-            
-            
-            return lo;
+        static void swap(ref int a, ref int b) {
+            int temp = b;
+            b = a       ;
+            a = temp    ;
         }
+        static int partition(int[] arr, int beg, int end) {
 
-        static void sort(ref int[] arr, int lo, int hi) {
+            var piv = arr[beg];
+            var bbeg = beg + 1; 
+            var eend = end;
 
-            if (hi != lo)
+            while (true)
             {
-                var res = partition(ref arr, lo, hi);
-                sort(ref arr, lo, res);
-                sort(ref arr, res + 1, hi);
+                while (eend > bbeg && arr[eend - 1] >= piv)
+                {
+                    eend--;
+                }
+
+                while (bbeg < eend && arr[bbeg] <= piv)
+                {
+                    bbeg++;
+                }
+
+                if (bbeg < eend)
+                {
+                    swap(ref arr[bbeg], ref arr[eend - 1]);
+                }
+                else
+                {
+                    if (arr[beg] > arr[bbeg - 1]) {
+                        swap(ref arr[beg], ref arr[bbeg - 1]);
+                    }
+                    return bbeg;
+                }
             }
         }
 
-        static void Main(string[] args)
-        {
-            int[] arr = { 3, 5, 8, 1, 2, 3, 7 };
+        static void sort(int[] arr, int beg, int end) {
 
-            sort(ref arr, 0, arr.Length - 1);
+            if (beg < end - 1)
+            {
+                var pos = partition(arr, beg, end);
+                sort(arr, beg, pos);
+                sort(arr, pos, end);
+            }
+        }
+
+        static int Main(string[] args)
+        {
+            int[] arr = { 3, 5, 8, 2, 1, 1, 2, 3, 7, 1, 1, 1 };
+
+            sort(arr, 0, arr.Length);
 
             for (int i = 1; i < arr.Length; i++) {
                 if (arr[i] < arr[i - 1]) {
                     Console.WriteLine("error!");
+                    return 1;
                 }
             }
 
+            return 0;
         }
     }
 }
